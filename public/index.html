@@ -1,1 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Database</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f4f4f4;
+    }
 
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    input {
+      display: block;
+      width: 300px;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 14px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .student {
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Student Database Viewer</h1>
+
+  <div class="box">
+    <button onclick="seedStudents()">Insert 5 Sample Students</button>
+    <button onclick="loadStudents()">Show All Students</button>
+  </div>
+
+  <div class="box">
+    <h2>Add a Student</h2>
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Student Name" required>
+      <input type="text" id="major" placeholder="Major" required>
+      <input type="number" id="gpa" placeholder="GPA" step="0.1" min="0" max="4" required>
+      <button type="submit">Add Student</button>
+    </form>
+  </div>
+
+  <div class="box">
+    <h2>All Students</h2>
+    <div id="studentList"></div>
+  </div>
+
+  <script>
+    async function loadStudents() {
+      const response = await fetch("/api/students");
+      const students = await response.json();
+
+      const studentList = document.getElementById("studentList");
+      studentList.innerHTML = "";
+
+      students.forEach(student => {
+        const div = document.createElement("div");
+        div.className = "student";
+        div.innerHTML = `
+          <strong>${student.name}</strong><br>
+          Major: ${student.major}<br>
+          GPA: ${student.gpa}
+        `;
+        studentList.appendChild(div);
+      });
+    }
+
+    async function seedStudents() {
+      const response = await fetch("/api/seed", {
+        method: "POST"
+      });
+
+      const result = await response.json();
+      alert(result.message || result.error);
+      loadStudents();
+    }
+
+    document.getElementById("studentForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const major = document.getElementById("major").value;
+      const gpa = parseFloat(document.getElementById("gpa").value);
+
+      const response = await fetch("/api/students", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, major, gpa })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Student added successfully");
+        document.getElementById("studentForm").reset();
+        loadStudents();
+      } else {
+        alert(result.error || "Failed to add student");
+      }
+    });
+
+    loadStudents();
+  </script>
+</body>
+</html>
