@@ -1,1 +1,17 @@
-
+db.students.insertMany([
+  {
+    name: "John Smith",
+    major: "Cybersecurity",
+    gpa: 3.7
+  },
+  {
+    name: "Emily Johnson",
+    major: "Computer Science",
+    gpa: 3.9
+  },
+  {
+    name: "Michael Brown",
+    major: "Information Technology",
+    gpa: 3.4
+  }
+])
