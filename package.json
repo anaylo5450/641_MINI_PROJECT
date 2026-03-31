@@ -1,15 +1,16 @@
 {
-  "name": "mini-project",
+  "name": "641-mini-project",
   "version": "1.0.0",
+  "description": "MongoDB and Render app",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.21.2",
-    "mongoose": "^8.18.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1"
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "mongoose": "^8.18.0"
   },
   "engines": {
     "node": ">=20 <21"
